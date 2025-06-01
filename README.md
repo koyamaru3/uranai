@@ -2,10 +2,13 @@
 
 ## 使い方
 
-```
+```javascript
 import { getUranaiNumber, getFairy } from "./modules/fairy-uranai.mjs";
 
+// 妖精番号を取得する
 const number = getUranaiNumber(1976, 4, 26); // year=1976, month=04, day=26
+
+// 妖精番号に取得する妖精情報を取得する
 const res = getFairy(number);
 
 console.log(res);
