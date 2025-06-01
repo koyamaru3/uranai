@@ -13,7 +13,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-      
+
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -41,5 +41,5 @@ jobs:
 
       - name: Lambda Update
         run: |
-          cd lambda && zip -r package.zip ./*
+          cd src && zip -r package.zip ./*
           aws lambda update-function-code --function-name uranai --zip-file fileb://package.zip --publish
