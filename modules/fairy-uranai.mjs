@@ -1,96 +1,14 @@
-/**
- * @file 妖精占い
- * @author koyamaru
- * @copyright (c) 2007,2022 ムルモ屋本舗
- * @license MIT
- * @version v1.0.0
- * 
- * https://api.murumoya.com/v1/uranai?birth=2001-04-01
- * のように、誕生日をbirthで指定する。
- */
-
-/**
- * 指定した誕生日をもとに妖精情報を返します。
- * @param {*} event 
- * @param {*} context 
- * @param {*} callback 
- */
-exports.handler = (event, context, callback) => {
-  console.log('Received event:', JSON.stringify(event, null, 2));
-
-  // 誕生日指定の有無をチェックする
-  if (event.queryStringParameters == null || event.queryStringParameters.birth === undefined) {
-    sendError("birthが指定されていません。", callback);
-  }
-
-  const birth = event.queryStringParameters.birth;
-
-  // 誕生日のフォーマットをチェックする
-  const regexp = new RegExp(/^\d{4}-\d{2}-\d{2}$/);
-  if (!regexp.test(birth)) {
-    sendError("birthの指定誤りです。", callback);
-  }
-
-  // 誕生日を数値に変換して保持する
-  const birthAry = birth.split('-');
-  const year = Number(birthAry[0]);
-  const month = Number(birthAry[1]);
-  const day = Number(birthAry[2]);
-  console.log(year, month, day);
-
-  if (!(month >= 1 && month <= 12)) {
-    sendError("誕生月の指定誤りです。", callback);
-  }
-
-  if (!(day >= 1 && day <= 31)) {
-    sendError("誕生日の指定誤りです。", callback);
-  }
-
-  // 誕生日から番号を取得し、さらに番号から妖精情報を取得する
-  const number = getNumber(year, month, day);
-  const res = getFairy(number);
-  console.log(res);
-
-  const response = {
-    statusCode: 200,
-    headers: {
-      'Content-type': 'application/json;charset=UTF-8'
-    },
-    body: JSON.stringify(res)
-  }
-
-  callback(null, response);
-};
-
-/**
- * エラーメッセージを返却します。
- * @param  {} _message
- * @param  {} _callback
- */
-function sendError(_message, _callback) {
-  const response = {
-    statusCode: 400,
-    headers: {
-      'Content-type': 'application/json;charset=UTF-8'
-    },
-    body: JSON.stringify({
-      error: _message
-    })
-  }
-
-  _callback(null, response);
-}
-
+// fairy-uranai.mjs
 /**
  * 誕生日から番号を取得します。
  * ①誕生年の下一桁と誕生月をもとに番号を取得
  * ②番号に日付を加えた値を返却
- * @param {number} _year 誕生年
- * @param {number} _month 誕生月
- * @param {number} _day 誕生日
+ * @param {number} year 誕生年
+ * @param {number} month 誕生月
+ * @param {number} day 誕生日
  * @return {number} 番号
  */
-function getNumber(_year, _month, _day) {
+export function getUranaiNumber(year, month, day) {
   const table = [
     [20,11, 5,14,25, 6,23, 3,19,30,10,17],   // 1970
     [15, 1,28,18, 2,12,16, 8,30,11, 4,26],   // 1971
@@ -104,14 +22,14 @@ function getNumber(_year, _month, _day) {
     [ 9, 2,13,27,16,24, 7,21, 6, 1,22, 4]    // 1979
   ];
 
-  return table[_year % 10][_month - 1] + _day;
+  return table[year % 10][month - 1] + day;
 }
 /**
  * 番号から妖精情報を取得します。
- * @param  {string} _number
+ * @param  {string} number
  * @return {object} 妖精情報
  */
-function getFairy(_number) {
+export function getFairy(number) {
   const fairies = [
     {
       name: 'ムルモ',
@@ -246,8 +164,8 @@ function getFairy(_number) {
   // 番号から妖精情報を取得する
   let res = {};
   fairies.map(fairy => {
-    fairy.numbers.map(number => {
-      if (_number == number) {
+    fairy.numbers.map(n => {
+      if (number == n) {
         console.log("一致");
         res.name = fairy.name;
         res.info = fairy.info;
