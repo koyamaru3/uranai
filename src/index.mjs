@@ -9,7 +9,7 @@
  * のように、誕生日をbirthで指定する。
  */
 
-import { getUranaiNumber, getFairy } from "../modules/fairy-uranai.mjs";
+import { getUranaiNumber, getFairy } from "./fairy-uranai.mjs";
 /**
  * 指定した誕生日をもとに妖精情報を返します。
  * @param {*} event 
