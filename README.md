@@ -3,7 +3,7 @@
 ## 使い方
 
 ```javascript
-import { getUranaiNumber, getFairy } from "./modules/fairy-uranai.mjs";
+import { getUranaiNumber, getFairy } from "./fairy-uranai.mjs";
 
 // 妖精番号を取得する
 const number = getUranaiNumber(1976, 4, 26); // year=1976, month=04, day=26
@@ -16,5 +16,5 @@ console.log(res);
 ```
 
 ## 補足
-index.mjs（とfairy-uranai.mjs）をLambdaに登録し、API Gatewayの統合(Integration)に指定すると、REST-APIを作成できます。
+index.mjsとfairy-uranai.mjsをLambdaに登録し、API Gatewayの統合(Integration)に指定すると、REST-APIを作成できます。
 <img src="images/lambda.png">
